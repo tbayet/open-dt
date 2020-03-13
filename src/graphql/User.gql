@@ -1,0 +1,20 @@
+query AccountQuery {
+  account {
+    id
+    role
+    username
+    avatar
+  }
+}
+
+mutation SignInMutation($email: String!, $password: String!) {
+  signIn(email: $email, password: $password)
+}
+
+mutation SignUpMutation($birthdate: String!, $city: CityInput!, $username: String!, $email: String!, $password: String!, $passwordConfirm: String!) {
+  signUp(birthdate: $birthdate, city: $city, username: $username, email: $email, password: $password, passwordConfirm: $passwordConfirm)
+}
+
+mutation SignUpFillProfileMutation($picture: PictureInput!, $gender: [String]!, $orientation: [String]!, $interestedBy: InterestedByInput!) {
+  signUpFillProfile(picture: $picture, gender: $gender, orientation: $orientation, interestedBy: $interestedBy)
+}

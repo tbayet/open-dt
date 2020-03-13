@@ -1,0 +1,40 @@
+{
+  "root": true,
+  "env": {
+    "node": true
+  },
+  "extends": [
+    "plugin:vue/essential",
+    "eslint:recommended",
+    "@vue/airbnb"
+  ],
+  "parserOptions": {
+    "parser": "babel-eslint"
+  },
+  "rules": {
+    "semi": "off",
+    "arrow-parens": "off",
+    "import/no-extraneous-dependencies": "off",
+    "import/prefer-default-export": "off",
+    "import/extensions": [
+      "error",
+      "ignorePackages",
+      {
+          "js": "never",
+          "vue": "never",
+          "gql": "never"
+      }
+    ],
+    "graphql/template-strings": [
+      "error",
+      {
+        "env": "literal",
+        "projectName": "app",
+        "schemaJsonFilepath": "node_modules/.temp/graphql/schema.json"
+      }
+    ]
+  },
+  "plugins": [
+    "graphql"
+  ]
+}

@@ -1,0 +1,23 @@
+"Included scalars"
+scalar JSON
+scalar Upload
+
+type Query {
+  cities: [City]
+  city: City
+
+  users: [User]
+  user: User
+  account: Account
+}
+
+type Mutation {
+  signIn(email: String!, password: String!): String! # token
+
+  signUpFillProfile(picture: PictureInput!, gender: [String]!, orientation: [String]!,
+    interestedBy: InterestedByInput!): String!
+
+  signUp(birthdate: String!, city: CityInput!, username: String!, email: String!,
+    password: String!, passwordConfirm: String!): String! # token
+}
+

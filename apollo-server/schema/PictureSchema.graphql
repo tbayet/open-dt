@@ -1,0 +1,9 @@
+type Picture {
+  raw: String!
+  cropped: String!
+}
+
+input PictureInput {
+  raw: Upload!
+  cropped: Upload!
+}

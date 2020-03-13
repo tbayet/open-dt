@@ -1,28 +1,43 @@
 <template>
-  <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
-  </div>
+  <v-app id="app">
+    <AppBar />
+    <v-container class="app__container">
+      <router-view/>
+    </v-container>
+    <BottomNavigation />
+  </v-app>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import AppBar from './layout/AppBar'
+import BottomNavigation from './layout/BottomNavigation'
 
 export default {
-  name: 'App',
   components: {
-    HelloWorld
-  }
+    AppBar,
+    BottomNavigation,
+  },
 }
 </script>
 
 <style>
 #app {
+  height: 100vh;
+  position: relative;
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
+  overflow-y: auto;
+  margin: 0px;
+  padding-top: 48px !important;
+  height: calc(100vh - 56px) !important;
+}
+.app__container {
+  height: 100%;
+}
+.page {
+  min-height: 100%;
 }
 </style>

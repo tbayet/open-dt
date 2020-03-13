@@ -1,0 +1,15 @@
+
+type User {
+  id: ID!
+  username: String
+  age: String
+}
+
+type Account {
+  id: ID!
+  role: String
+  username: String
+  email: String
+  birthdate: String
+  avatar: String
+}

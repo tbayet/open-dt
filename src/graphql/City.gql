@@ -1,0 +1,8 @@
+query CitiesQuery {
+  cities {
+    name
+    country
+    lat
+    long
+  }
+}

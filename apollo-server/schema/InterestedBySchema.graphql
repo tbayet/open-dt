@@ -1,0 +1,4 @@
+input InterestedByInput {
+  gender: [String]!
+  age: [Int]!
+}

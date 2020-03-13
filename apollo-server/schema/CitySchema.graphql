@@ -1,0 +1,13 @@
+type City {
+  name: String
+  country: String
+  lat: Float
+  long: Float
+}
+
+input CityInput {
+  name: String!
+  country: String!
+  lat: Float!
+  long: Float!
+}
