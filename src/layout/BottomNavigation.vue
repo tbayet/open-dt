@@ -1,5 +1,5 @@
  <template>
-   <v-bottom-navigation v-model="bottomNav" fixed dark shift>
+   <v-bottom-navigation v-model="bottomNav" dark shift>
     <v-btn>
       <span>Video</span>
       <v-icon>mdi-television-play</v-icon>

@@ -1,0 +1,35 @@
+mutation SectionName($user: UserInput!) {
+    updateUser(user: $user) {
+        username
+        age
+        birthdate
+        city {
+            name
+            country
+        }
+    }
+}
+
+mutation SectionGender($user: UserInput!) {
+    updateUser(user: $user) {
+        gender
+        orientation
+    }
+}
+
+mutation SectionPunchline($user: UserInput!) {
+    updateUser(user: $user) {
+        punchline
+    }
+}
+
+ 
+mutation SectionPictures($user: UserInput!) {
+    updateUser(user: $user) {
+        avatar
+        pictures {
+            raw
+            cropped
+        }
+    }
+}

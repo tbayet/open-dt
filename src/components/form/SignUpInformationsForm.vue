@@ -46,40 +46,10 @@
             </v-expansion-panel-header>
             <v-expansion-panel-content>
               <p class="title mb-2 text-left">Gender(s)</p>
-              <v-select
-                v-show="false"
-                v-model="fields.gender"
-                multiple readonly
-                required
-                :rules="rules.selectGenderRules"
-              />
-              <v-chip-group
-                v-model="selectedGender"
-                column multiple
-                class="mb-8"
-              >
-                <v-chip v-for="gender in genderList" :key="gender" filter outlined>
-                  {{ gender }}
-                </v-chip>
-              </v-chip-group>
+              <SelectGender v-model="fields.gender" />
 
               <p class="title mb-2 text-left">Orientation(s)</p>
-              <v-select
-                v-show="false"
-                v-model="fields.orientation"
-                multiple readonly
-                required
-                :rules="rules.selectOrientationRules"
-              />
-              <v-chip-group
-                v-model="selectedOrientation"
-                column multiple
-                class="mb-8"
-              >
-                <v-chip v-for="orientation in orientationList" :key="orientation" filter outlined>
-                  {{ orientation }}
-                </v-chip>
-              </v-chip-group>
+              <SelectOrientation v-model="fields.orientation" />
             </v-expansion-panel-content>
           </v-expansion-panel>
 
@@ -97,21 +67,7 @@
             </v-expansion-panel-header>
             <v-expansion-panel-content>
               <p class="title mb-2 text-left">Gender(s)</p>
-              <v-select
-                v-show="false"
-                v-model="fields.interestedBy.gender"
-                multiple readonly
-                required
-                :rules="rules.selectGenderRules"
-              />
-              <v-chip-group
-                v-model="selectedInterestGender"
-                column multiple
-              >
-                <v-chip v-for="gender in genderList" :key="gender" filter outlined>
-                  {{ gender }}
-                </v-chip>
-              </v-chip-group>
+              <SelectGender v-model="fields.interestedBy.gender" />
 
               <p class="title mb-2 text-left">Age</p>
               <v-row>
@@ -167,6 +123,9 @@
 </template>
 
 <script>
+import { GENDERS_LIST, ORIENTATIONS_LIST } from '../../utils/enums'
+import SelectGender from './inputs/SelectGender'
+import SelectOrientation from './inputs/SelectOrientation'
 import { SignUpFillProfileMutation } from '../../graphql/User.gql'
 import PictureUpload from './SignUp/PictureUpload'
 import rules from '../../utils/form/rules'
@@ -175,6 +134,8 @@ export default {
   name: 'SignUpInformationsForm',
   components: {
     PictureUpload,
+    SelectGender,
+    SelectOrientation,
   },
   data: () => ({
     SignUpFillProfileMutation,
@@ -193,9 +154,8 @@ export default {
         age: [18, 99],
       },
     },
-    genderList: ['OTHER', 'TRANSWOMAN', 'TRANSMAN', 'NOGENDER', 'WOMAN', 'MAN'],
-    orientationList: ['HETEROSEXUAL', 'HOMOSEXUAL', 'BISEXUAL', 'PANSEXUAL', 'ASEXUAL',
-      'SAPIOSEXUAL', 'HETEROFLEXIBLE', 'HOMOFLEXIBLE'],
+    GENDERS_LIST,
+    ORIENTATIONS_LIST,
   }),
   computed: {
     account() {
@@ -203,26 +163,28 @@ export default {
     },
     selectedGender: {
       get() {
-        return this.fields.gender.map(gender => this.genderList.indexOf(gender))
+        return this.fields.gender.map(gender => this.GENDERS_LIST.indexOf(gender))
       },
       set(newValue = []) {
-        this.fields.gender = newValue.map(index => this.genderList[index])
+        this.fields.gender = newValue.map(index => this.GENDERS_LIST[index])
       },
     },
     selectedOrientation: {
       get() {
-        return this.fields.orientation.map(orientation => this.orientationList.indexOf(orientation))
+        return this.fields.orientation.map(
+          orientation => this.ORIENTATIONS_LIST.indexOf(orientation),
+        )
       },
       set(newValue = []) {
-        this.fields.orientation = newValue.map(index => this.orientationList[index])
+        this.fields.orientation = newValue.map(index => this.ORIENTATIONS_LIST[index])
       },
     },
     selectedInterestGender: {
       get() {
-        return this.fields.interestedBy.gender.map(gender => this.genderList.indexOf(gender))
+        return this.fields.interestedBy.gender.map(gender => this.GENDERS_LIST.indexOf(gender))
       },
       set(newValue = []) {
-        this.fields.interestedBy.gender = newValue.map(index => this.genderList[index])
+        this.fields.interestedBy.gender = newValue.map(index => this.GENDERS_LIST[index])
       },
     },
     isPictureValid() {

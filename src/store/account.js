@@ -22,7 +22,7 @@ const getDefaultState = (account = {}) => ({
   avatar: account.avatar ? `${API_PATH}/${account.avatar}` : null,
 })
 
-const userStore = {
+const accountStore = {
   namespaced: true,
 
   state: {
@@ -67,4 +67,4 @@ const userStore = {
   },
 }
 
-export default userStore
+export default accountStore

@@ -20,7 +20,8 @@ const routes = [
     ...authenticated,
   },
   {
-    path: '/profile',
+    path: '/profile/:id',
+    props: true,
     name: 'Profile',
     component: Profile,
     ...authenticated,

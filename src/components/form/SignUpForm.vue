@@ -20,31 +20,7 @@
               <v-expansion-panel-content>
                 <v-row justify="center">
                   <v-col cols="10" sm="6" md="6">
-                    <v-menu
-                      v-model="birthdateMenu"
-                      top
-                      ref="birthdateMenu"
-                      transition="scale-transition"
-                      min-width="290px"
-                      :close-on-content-click="false"
-                    >
-                      <template v-slot:activator="{ on }">
-                        <v-text-field
-                          v-model="fields.birthdate"
-                          v-on="on"
-                          label="Birthday date"
-                          append-icon="mdi-calendar"
-                          readonly outlined required
-                        />
-                      </template>
-                      <v-date-picker
-                        v-model="fields.birthdate"
-                        ref="birthdatePicker"
-                        min="1950-01-01"
-                        :max="new Date().toISOString().substr(0, 10)"
-                        @change="saveBirthdate"
-                      />
-                    </v-menu>
+                    <SelectBirthdate v-model="fields.birthdate" />
                   </v-col>
                   <v-col cols="10">
                     <v-alert
@@ -63,15 +39,7 @@
               <v-expansion-panel-content>
                 <v-row justify="center">
                   <v-col cols="10" sm="8" md="6" lg="4">
-                    <v-select
-                      v-if="cities"
-                      v-model="fields.city"
-                      return-object
-                      prepend-inner-icon="mdi-map-marker"
-                      item-text="name" outlined
-                      :items="cities"
-                    />
-                    <v-progress-circular v-else indeterminate />
+                    <SelectCity v-model="fields.city" />
                   </v-col>
                   <v-col cols="10">
                     <v-alert type="info" transition="scale-transition">
@@ -86,13 +54,7 @@
               <v-expansion-panel-content>
                 <v-row justify="center">
                   <v-col cols="12" sm="10" md="6">
-                    <v-text-field
-                      v-model="fields.username"
-                      type="text"
-                      label="Username"
-                      required
-                      :rules="rules.createUsernameRules"
-                    />
+                    <InputUsername v-model="fields.username" />
                   </v-col>
                   <v-col cols="12" sm="10" md="6">
                     <v-text-field
@@ -147,20 +109,17 @@
 <script>
 import moment from 'moment'
 import { SignUpMutation } from '@/graphql/User.gql'
-import { CitiesQuery } from '@/graphql/City.gql'
 import rules from '../../utils/form/rules'
+import SelectBirthdate from './inputs/SelectBirthdate'
+import SelectCity from './inputs/SelectCity'
+import InputUsername from './inputs/InputUsername'
 
 export default {
   name: 'SignUpForm',
-  apollo: {
-    cities: {
-      query: CitiesQuery,
-      update: data => data.cities.map(city => Object.keys(city)
-        .reduce((acc, k) => ({
-          ...acc,
-          ...(k.startsWith('__') ? null : { [k]: city[k] }),
-        }), {})),
-    },
+  components: {
+    SelectBirthdate,
+    SelectCity,
+    InputUsername,
   },
   data: () => ({
     SignUpMutation,
@@ -174,13 +133,12 @@ export default {
       passwordConfirm: '',
     },
     rules,
-    birthdateMenu: false,
     currentPanel: 0,
   }),
 
   computed: {
-    cityIsValid() {
-      return this.cities && this.cities.find(c => c === this.fields.city)
+    isCityFilled() {
+      return !!this.fields.city
     },
     confirmPasswordRules() {
       return rules.confirmInputWrapper('password', this.fields.password)
@@ -199,23 +157,15 @@ export default {
     signOut() {
       this.$store.dispatch('account/signOut')
     },
-    saveBirthdate(date) {
-      this.$refs.birthdateMenu.save(date)
-    },
   },
 
   watch: {
-    birthdateMenu(val) {
-      if (val) {
-        setTimeout(() => { this.$refs.birthdatePicker.activePicker = 'YEAR' })
-      }
-    },
     birthdateIsValid(val) {
       if (val) {
         this.currentPanel = 1
       }
     },
-    cityIsValid(val) {
+    isCityFilled(val) {
       if (val && this.birthdateIsValid) {
         this.currentPanel = 2
       }

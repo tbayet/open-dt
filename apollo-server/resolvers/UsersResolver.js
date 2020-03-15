@@ -27,18 +27,37 @@ const validateInputs = (alreadyExists, birthdate, username, email, password, pas
 }
 
 const Query = {
-  users: (root, args = {}, { userAccount }) => userAccount && User.getValues(args),
-  account: async (root, args, { userAccount }) => {
+  user: async (_, { id }, { userAccount }, info) => {
+    if (!userAccount) throw AuthenticationError
+    const user = await User.getOne({ id }, info)
+    if (!user) throw AuthenticationError
+    return user.value
+  },
+
+  account: async (_, args, { userAccount }, info) => {
     if (Object.keys(args).every(key => key in userAccount)) {
       return userAccount
     }
-    const user = await User.getOne({ id: userAccount.id })
+    const user = await User.getOne({ id: userAccount.id }, info)
     return user.accountValue
   },
 }
 
 const Mutation = {
-  async signUpFillProfile(root, {
+  async updateUser(_, params, { userAccount }, info) {
+    const newUser = { ...params.user }
+    let user = null
+    if (userAccount.role === 'ADMIN') {
+      user = await User.getOne({ id: newUser.id }, info)
+    } else {
+      user = await User.getOne({ id: userAccount.id }, info)
+    }
+    delete newUser.id
+    await user.update(newUser)
+    return user.value
+  },
+
+  async signUpFillProfile(_, {
     picture, gender, orientation, interestedBy,
   }, { userAccount }) {
     if (!userAccount) throw Error()
@@ -64,7 +83,7 @@ const Mutation = {
     }
   },
 
-  async signUp(root, {
+  async signUp(_, {
     birthdate, city, username, email, password, passwordConfirm,
   }) {
     try {

@@ -1,10 +1,10 @@
 <template>
   <v-app id="app">
     <AppBar />
-    <v-container class="app__container">
+    <div class="app__container">
       <router-view/>
-    </v-container>
-    <BottomNavigation />
+      <BottomNavigation />
+    </div>
   </v-app>
 </template>
 
@@ -22,22 +22,17 @@ export default {
 
 <style>
 #app {
-  height: 100vh;
+  background-color: #272727;
   position: relative;
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  overflow-y: auto;
   margin: 0px;
-  padding-top: 48px !important;
-  height: calc(100vh - 56px) !important;
 }
 .app__container {
-  height: 100%;
-}
-.page {
-  min-height: 100%;
+  background-color: white;
+  margin-top: 48px !important;
 }
 </style>

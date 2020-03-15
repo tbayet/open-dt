@@ -8,6 +8,6 @@ type City {
 input CityInput {
   name: String!
   country: String!
-  lat: Float!
-  long: Float!
+  lat: Float
+  long: Float
 }

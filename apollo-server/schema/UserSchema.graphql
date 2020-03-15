@@ -1,8 +1,28 @@
 
 type User {
+  id: ID
+  username: String
+  age: String
+  birthdate: String
+  avatar: String
+  pictures: [Picture]
+  city: City
+  gender: [String]
+  orientation: [String]
+  punchline: String
+}
+
+input UserInput {
   id: ID!
   username: String
   age: String
+  birthdate: String
+  avatar: String
+  pictures: [PictureInput]
+  city: CityInput
+  gender: [String]
+  orientation: [String]
+  punchline: String
 }
 
 type Account {

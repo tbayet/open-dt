@@ -20,6 +20,7 @@ const confirmInputWrapper = (inputName, input) => [
 const createUsernameRules = [
   isRequired('Username'),
   v => v.length >= 3 || 'Username must be 3+ characters',
+  v => v.length <= 18 || 'Username must be -18 characters',
 ]
 
 const enterPasswordRules = [
