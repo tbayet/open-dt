@@ -2,29 +2,11 @@ import jwt from 'jsonwebtoken'
 import shortid from 'shortid'
 import moment from 'moment'
 import bcrypt from 'bcrypt'
-import graphqlFields from 'graphql-fields'
 import { db } from '../utils/db'
 import configuration from '../configuration'
+import { getRequestedFields, deleteForbiddenKeys, asyncUpdate } from './utils'
 
-const getRequestedFields = info => (info ? Object.keys(graphqlFields(info)) : null)
-
-const deleteForbiddenKeys = (value, forbidden) => {
-  const newValue = JSON.parse(JSON.stringify(value))
-  forbidden.forEach(key => {
-    if (key.includes(':')) {
-      const keys = key.split(':')
-      keys.reduce((acc, k, i) => {
-        const res = acc[k]
-        if (i === keys.length - 1) {
-          delete acc[k]
-        }
-        return res
-      }, newValue)
-    }
-  })
-  return newValue
-}
-
+const ASYNC_CALCULATED_KEYS = ['tags']
 const COMPUTED_KEYS = ['avatar', 'age']
 
 class User {
@@ -40,8 +22,20 @@ class User {
   }
 
   async update(values) {
+    // Check if some values needs an asynchronous calculation and request for it
+    const fullValues = await Object.keys(values).reduce(async (acc, key) => {
+      const newValue = ASYNC_CALCULATED_KEYS.includes(key)
+        ? await asyncUpdate[key](values[key], this.userValue[key])
+        : values[key]
+      return {
+        ...acc,
+        [key]: newValue,
+      }
+    }, {})
+
+    // Assign values
     await this.user
-      .assign(values)
+      .assign(fullValues)
       .write()
     this.userValue = {
       ...this.userValue,
@@ -81,6 +75,10 @@ class User {
     return deleteForbiddenKeys(this.userValue, forbidden)
   }
 
+  get pictures() {
+    return this.userValue.pictures || null
+  }
+
   get avatar() {
     return this.userValue.pictures ? this.userValue.pictures[0].cropped : null
   }
@@ -111,7 +109,7 @@ const getOne = async ({ id, email }, info) => {
   return null
 }
 
-const get = async (params, info) => {
+const getAll = async (params, info) => {
   const users = await db.get('users').filter(params).value()
   return Promise.all(
     users.map(async userValue => {
@@ -123,7 +121,7 @@ const get = async (params, info) => {
 
 
 const getValues = async (params, info) => {
-  const users = await get(params)
+  const users = await getAll(params)
   return users.map(user => new User(user, getRequestedFields(info)).value)
 }
 
@@ -160,7 +158,7 @@ const updateOne = async (selector, values, info) => {
 }
 
 User.getOne = getOne
-User.get = get
+User.getAll = getAll
 User.getValues = getValues
 User.updateOne = updateOne
 User.createOne = createOne

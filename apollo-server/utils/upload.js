@@ -5,6 +5,8 @@ import { sync } from 'mkdirp'
 import { generate } from 'shortid'
 import { db } from './db'
 
+const API_PATH = 'http://localhost:4000'
+
 const uploadDir = resolve(__dirname, '../../live/uploads')
 
 // Ensure upload directory exists
@@ -14,11 +16,12 @@ const storeUpload = async ({ stream, filename }) => {
   const id = generate()
   const file = `${id}-${filename}`
   const path = `${uploadDir}/${file}`
-  const urlPath = `files/${file}`
+  const relativePath = `files/${file}`
+  const fullPath = `${API_PATH}/${relativePath}`
 
   return new Promise((resolveP, reject) => stream
     .pipe(createWriteStream(path))
-    .on('finish', () => resolveP({ id, path: urlPath }))
+    .on('finish', () => resolveP({ id, path: fullPath }))
     .on('error', reject))
 }
 
@@ -45,5 +48,5 @@ export async function processPictureUpload(dataURLFile) {
   const filename = `${generate() + new Date().toISOString()}.${format}`
   const writeFile = util.promisify(fs.writeFile);
   await writeFile(`${uploadDir}/${filename}`, imageBuffer, 'binary')
-  return `files/${filename}`
+  return `${API_PATH}/files/${filename}`
 }

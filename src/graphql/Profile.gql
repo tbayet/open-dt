@@ -23,13 +23,29 @@ mutation SectionPunchline($user: UserInput!) {
     }
 }
 
- 
+mutation addPicture($userID: ID!, $newPicture: PictureInput!) {
+    addPicture(userID: $userID, newPicture: $newPicture) {
+        raw
+        cropped
+    }
+}
+
 mutation SectionPictures($user: UserInput!) {
     updateUser(user: $user) {
-        avatar
         pictures {
             raw
             cropped
+        }
+        avatar
+    }
+}
+
+mutation SectionTags($user: UserInput!) {
+    updateUser(user: $user) {
+        tags {
+            label
+            color
+            icon
         }
     }
 }

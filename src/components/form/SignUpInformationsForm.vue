@@ -27,8 +27,6 @@
             </v-expansion-panel-header>
             <v-expansion-panel-content>
               <PictureUpload v-model="fields.picture" />
-              <img :src="fields.picture.raw" />
-              <img :src="fields.picture.cropped" />
             </v-expansion-panel-content>
           </v-expansion-panel>
 

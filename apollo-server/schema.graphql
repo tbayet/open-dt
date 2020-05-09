@@ -3,6 +3,8 @@ scalar JSON
 scalar Upload
 
 type Query {
+  tags: [Tag]
+
   cities: [City]
   city: City
 
@@ -13,6 +15,8 @@ type Query {
 
 type Mutation {
   updateUser(user: UserInput!): User!
+
+  addPicture(userID: ID!, newPicture: PictureInput!): [Picture]!
 
   signIn(email: String!, password: String!): String! # token
 

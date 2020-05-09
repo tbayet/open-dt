@@ -6,6 +6,7 @@ type User {
   birthdate: String
   avatar: String
   pictures: [Picture]
+  tags: [Tag]
   city: City
   gender: [String]
   orientation: [String]
@@ -19,6 +20,7 @@ input UserInput {
   birthdate: String
   avatar: String
   pictures: [PictureInput]
+  tags: [String]
   city: CityInput
   gender: [String]
   orientation: [String]

@@ -1,0 +1,7 @@
+query TagsQuery {
+  tags {
+    label
+    color
+    icon
+  }
+}

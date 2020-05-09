@@ -1,7 +1,7 @@
 import { Apollo } from '../vue-apollo'
 import { graphqlToObject } from '../utils/graphql'
 import {
-  SectionGender, SectionPictures, SectionName, SectionPunchline,
+  SectionGender, SectionPictures, SectionName, SectionPunchline, SectionTags, addPicture,
 } from '../graphql/Profile.gql'
 
 const sections = {
@@ -9,23 +9,20 @@ const sections = {
   sectionPictures: SectionPictures,
   sectionName: SectionName,
   sectionPunchline: SectionPunchline,
+  sectionTags: SectionTags,
 }
-
-const API_PATH = 'http://localhost:4000'
 
 const getDefaultState = (user = {}) => ({
   id: user.id || null,
   username: user.username || null,
   birthdate: user.birthdate || null,
-  avatar: user.avatar ? `${API_PATH}/${user.avatar}` : null,
-  pictures: user.pictures ? user.pictures.map(p => ({
-    raw: `${API_PATH}/${p.raw}`,
-    cropped: `${API_PATH}/${p.cropped}`,
-  })) : [],
+  avatar: user.avatar || {},
+  pictures: user.pictures || [],
+  tags: user.tags || [],
   age: user.age || null,
-  city: user.city || null,
-  gender: user.gender || null,
-  orientation: user.orientation || null,
+  city: user.city || {},
+  gender: user.gender || [],
+  orientation: user.orientation || [],
   punchline: user.punchline || null,
 })
 
@@ -34,7 +31,7 @@ const profileStore = {
 
   state: {
     user: getDefaultState(),
-    loading: {},
+    loading: Object.keys(sections).reduce((acc, section) => ({ ...acc, [section]: false }), {}),
   },
 
   mutations: {
@@ -46,7 +43,7 @@ const profileStore = {
         ...state.user,
         ...graphqlToObject(values),
       }
-      delete state.loading[section]
+      state.loading[section] = false
     },
     ASSIGN: (state, user) => {
       Object.assign(state.user, getDefaultState(graphqlToObject(user)))
@@ -56,6 +53,17 @@ const profileStore = {
   actions: {
     assign({ commit }, user) {
       commit('ASSIGN', user)
+    },
+
+    async addPicture({ state, commit }, newPicture) {
+      const { data } = await Apollo.client.mutate({
+        mutation: addPicture,
+        variables: {
+          userID: state.user.id,
+          newPicture,
+        },
+      })
+      commit('SETVALUE', { values: { pictures: data.addPicture } })
     },
 
     async updateSection({ state, commit }, { section, values }) {

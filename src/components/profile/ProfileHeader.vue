@@ -8,26 +8,27 @@
             <v-hover>
               <template v-slot:default="{ hover }">
                 <div class="position-relative">
-                    <PhotosModal v-model="photoModal" :photos="user.pictures" />
-                    <v-avatar @click="photoModal = true" size="200">
-                      <v-img
-                        class="avatar--grey"
-                        :src="user.avatar"
-                        :alt="`${user.username} avatar`"
-                      >
-                    <v-expand-transition>
-                      <div
-                        v-if="hover"
-                        class="d-flex transition-fast-in-fast-out
-                          darken-2 v-card--reveal white--text headline"
-                        style="height: 100%;"
-                      >
-                        <span>Photos</span>
-                      </div>
-                    </v-expand-transition>
-                      </v-img>
-                    </v-avatar>
-                  <EditProfileSectionButton offsetX dark />
+                  <PhotosModal v-model="photoModal" :photos="user.pictures" />
+                  <v-avatar @click="photoModal = true" size="200">
+                    <v-img
+                      class="avatar--grey"
+                      :src="user.avatar"
+                      :alt="`${user.username} avatar`"
+                    >
+                      <v-expand-transition>
+                        <div
+                          v-if="hover"
+                          class="d-flex transition-fast-in-fast-out
+                            darken-2 v-card--reveal white--text headline"
+                          style="height: 100%;"
+                        >
+                          <span>Photos</span>
+                        </div>
+                      </v-expand-transition>
+                    </v-img>
+                  </v-avatar>
+                  <EditProfilePhotos v-model="dialogPictures" />
+                  <EditProfileSectionButton @click.native="dialogPictures = true" offsetX dark />
                 </div>
               </template>
             </v-hover>
@@ -106,6 +107,7 @@ import EditProfileModal from './EditProfileModal'
 import SelectBirthdate from '../form/inputs/SelectBirthdate'
 import InputUsername from '../form/inputs/InputUsername'
 import PhotosModal from './PhotosModal'
+import EditProfilePhotos from './EditProfilePhotos'
 
 export default {
   components: {
@@ -116,6 +118,7 @@ export default {
     SelectCity,
     InputUsername,
     EditProfileModal,
+    EditProfilePhotos,
     PhotosModal,
   },
   data() {
@@ -125,6 +128,7 @@ export default {
       sectionPictures: {},
       sectionPunchline: {},
       sectionName: {},
+      dialogPictures: false,
       dialogGender: false,
       dialogName: false,
       dialogPunchline: false,

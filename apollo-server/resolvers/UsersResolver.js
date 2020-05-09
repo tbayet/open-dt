@@ -52,9 +52,30 @@ const Mutation = {
     } else {
       user = await User.getOne({ id: userAccount.id }, info)
     }
-    delete newUser.id
     await user.update(newUser)
     return user.value
+  },
+
+  async addPicture(_, params, { userAccount }, info) {
+    const { userID, newPicture } = params
+    let user = null
+    if (userAccount.role === 'ADMIN') {
+      user = await User.getOne({ id: userID }, info)
+    } else {
+      user = await User.getOne({ id: userAccount.id }, info)
+    }
+    const raw = await processPictureUpload(newPicture.raw)
+    const cropped = await processPictureUpload(newPicture.cropped)
+    await user.update({
+      pictures: [
+        {
+          raw,
+          cropped,
+        },
+        ...user.pictures,
+      ],
+    })
+    return user.pictures
   },
 
   async signUpFillProfile(_, {

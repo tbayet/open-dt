@@ -20,26 +20,34 @@ export default {
     ProfileDescription,
     ProfileWidgets,
   },
+  created() {
+    this.profileID = this.id || this.$store.state.account.id
+    this.$apollo.queries.user.start()
+  },
   props: {
     id: {
       type: String,
-      default: 'dphcqZAj',
+      default: null,
     },
   },
   apollo: {
     user: {
+      skip: true,
       query: UserProfileQuery,
       variables() {
-        return { id: this.id }
+        return { id: this.profileID }
       },
       result({ data }) {
         this.$store.dispatch('profile/assign', data.user)
+      },
+      error() {
+        return this.$router.redirect('/')
       },
     },
   },
   data() {
     return {
-
+      profileID: null,
     }
   },
 }

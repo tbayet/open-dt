@@ -22,6 +22,7 @@ const listImages = [
   },
 ]
 
+// Create and Load an image in a canvas
 const loadImage = (image) => new Promise((resolve, reject) => {
   const img = new Image()
   img.src = image.src

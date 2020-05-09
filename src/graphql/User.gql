@@ -18,6 +18,11 @@ query UserProfileQuery($id: ID!) {
       raw
       cropped
     }
+    tags {
+      label
+      color
+      icon
+    }
     city {
       name
       country

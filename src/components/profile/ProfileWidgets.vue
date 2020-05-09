@@ -51,10 +51,7 @@ export default {
   },
   methods: {
     getWidgetElevation(index) {
-      if (this.hovered === index) {
-        return 8
-      }
-      return 0
+      return this.hovered === index ? 8 : 0
     },
   },
 }

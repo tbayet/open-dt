@@ -1,0 +1,5 @@
+type Tag {
+  label: String
+  color: String
+  icon: String
+}

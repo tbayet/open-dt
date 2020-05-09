@@ -29,7 +29,7 @@ const getOne = async ({ lat, long }) => {
   return null
 }
 
-const get = async (params) => {
+const getAll = async (params) => {
   const cities = await db.get('cities').filter(params).value()
   return Promise.all(
     cities.map(async cityValue => {
@@ -40,7 +40,7 @@ const get = async (params) => {
 }
 
 const getValues = async (params) => {
-  const cities = await get(params)
+  const cities = await getAll(params)
   return cities.map(city => city.value)
 }
 
@@ -66,7 +66,7 @@ const updateOne = async ({ lat, long }, values) => {
 }
 
 City.getOne = getOne
-City.get = get
+City.getAll = getAll
 City.getValues = getValues
 City.updateOne = updateOne
 City.createOne = createOne
