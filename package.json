@@ -13,7 +13,7 @@
   },
   "dependencies": {
     "@babel/polyfill": "^7.4.4",
-    "bcrypt": "4.0.0",
+    "bcrypt": "5.0.0",
     "chart.js": "2.9.3",
     "core-js": "^3.6.4",
     "cropperjs": "1.5.6",
